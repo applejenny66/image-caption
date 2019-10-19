@@ -1,16 +1,30 @@
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
 from selenium import webdriver 
 from selenium.webdriver.chrome.options import Options
 import time  
-import urllib.request
+#import urllib.request
+try: #python3
+    from urllib.request import urlopen
+except: #python2
+    from urllib2 import urlopen
+
 from bs4 import BeautifulSoup as bs
 import re  
 import os  
 #****************************************************
 base_url_part1 = 'https://www.google.com/search?q='
 base_url_part2 = '&source=lnms&tbm=isch' # base_url_part1以及base_url_part2都是固定不变的，无需更改
-search_query = '火影忍者' # 检索的关键词，可自己输入你想检索的关键字
+search_query = "川普" # 检索的关键词，可自己输入你想检索的关键字
 #location_driver = '/Users/applejenny/Downloads/ChromeDriver/chromedriver' # Chrome驱动程序在电脑中的位置
-location_driver = 'C:/Users/applejenny/Downloads/chromedriver_win32/chromedriver' # Chrome驱动程序在电脑中的位置
+
+# for windows
+#location_driver = 'C:/Users/applejenny/Downloads/chromedriver_win32/chromedriver' # Chrome驱动程序在电脑中的位置
+
+#for ubuntu
+location_driver = '/home/applejenny/下載/chromedriver_linux64/chromedriver/'
+
+
 class Crawler:
     def __init__(self):
         self.url = base_url_part1 + search_query + base_url_part2
@@ -29,9 +43,13 @@ class Crawler:
  
     def downloadImg(self, driver):  
         t = time.localtime(time.time())
-        foldername = str(t.__getattribute__("tm_year")) + "-" + str(t.__getattribute__("tm_mon")) + "-" + \
+        foldername = str(t.__getattribute__("tm_year")) + "_" + str(t.__getattribute__("tm_mon")) + "_" + \
                      str(t.__getattribute__("tm_mday")) + "_2" # 定义文件夹的名字
-        picpath = 'C:/Users/applejenny/Desktop/jenny/ImageDownload/%s' %(foldername) # 下载到的本地目录
+        #for windows
+        #picpath = 'C:/Users/applejenny/Desktop/jenny/ImageDownload/%s' %(foldername) # 下载到的本地目录
+        
+        #for ubuntu
+        picpath = '/home/applejenny/jenny/image-caption/imgcap/%s' %(foldername) # 下载到的本地目录
         #picpath = '/Users/applejenny/ImageDownload/%s' %(foldername)
         # 路径不存在时创建一个
         if not os.path.exists(picpath): os.makedirs(picpath)
@@ -57,7 +75,8 @@ class Crawler:
             # ??这段代码问题?
             for imgurl in imglist:
                 try:
-                    print(x, end=' ')
+                    #print(x, end=" ")
+                    print(x)
                     if imgurl['src'] not in img_url_dic:
                         target = '{}/{}.jpg'.format(picpath, x)
                         # print ('Downloading image to location: ' + target + '\nurl=' + imgurl['src'])
